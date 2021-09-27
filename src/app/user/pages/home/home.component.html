@@ -1,0 +1,18 @@
+<div class="container">
+    <p-card>
+      
+        <h3>CONTROL DE INGRESO</h3>      
+      <br>
+      <form *ngIf="!carga" (ngSubmit)="search()">
+        <span class="p-float-label">
+          <input  [(ngModel)]="dni" type="text" autocomplete="off" pInputText name="dni">
+          <label for="float-input">Ingrese un número de DNI</label>
+        </span>
+        <br>
+        <p-selectButton [options]="tipoPersona" [(ngModel)]="tipo" optionLabel="tipo"></p-selectButton> 
+        <br>
+        <p-button label="Buscar"  type="submit" icon="pi pi-search"></p-button>
+      </form>
+    </p-card>  
+  </div>
+  <p-toast position="top-center"></p-toast>

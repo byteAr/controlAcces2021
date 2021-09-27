@@ -1,4 +1,5 @@
 
+import { ClassGetter } from '@angular/compiler/src/output/output_ast';
 import { Component } from '@angular/core';
 import {MessageService} from 'primeng/api';
 import * as XLSX from 'xlsx';
@@ -16,7 +17,7 @@ export class AppComponent {
   carga=true;
   disabled:boolean = true;  
   dni='';
-  personal:any;
+  personal: Personal[] = [];
 
   constructor(private messageService: MessageService) {}
 
@@ -29,12 +30,9 @@ export class AppComponent {
     switch(personaEncontrada) {
       case undefined:
         this.messageService.add({severity:'error', summary:'ACCESO DENEGADO', detail:'El DNI proporcionado no corresponde a una persona autorizada a Ingresar'});
-        break;
-      case '':
-        this.messageService.add({severity:'error', summary:'', detail:'Debe ingresar un número de DNI'});
-        break;
+        break;      
       case personaEncontrada:
-        this.messageService.add({severity:'success', summary:'INGRESO AUTORIZADO', detail:`${personaEncontrada.NOMBRE} ${personaEncontrada.APELLIDO} - ${personaEncontrada.DESTINO}`});
+        this.messageService.add({severity:'success', summary:'INGRESO AUTORIZADO', detail:`${personaEncontrada?.NOMBRE} ${personaEncontrada?.APELLIDO} - ${personaEncontrada?.DESTINO}`});
         break;
       default:
         this.messageService.add({severity:'success', summary:'', detail:`Por favor ingrese un dni válido`});
@@ -51,12 +49,11 @@ export class AppComponent {
       let binaryData = event.target.result;
       let workbook = XLSX.read(binaryData, {type:'binary'});
       workbook.SheetNames.forEach(sheet => {
-        const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+        const data: Personal[] = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
         this.personal = data;
+        console.log(data)
       })
 
     }
   }
-
-
 }

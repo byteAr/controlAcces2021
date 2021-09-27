@@ -8,12 +8,7 @@ import {HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-//PrimeNg
-import {ButtonModule} from 'primeng/button';
-import {CardModule} from 'primeng/card';
-import {InputTextModule} from 'primeng/inputtext';
-import {ToastModule} from 'primeng/toast';
-import {FileUploadModule} from 'primeng/fileupload';
+
 
 
 
@@ -24,14 +19,9 @@ import {FileUploadModule} from 'primeng/fileupload';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    ButtonModule,
-    CardModule,
-    InputTextModule,
-    ToastModule,
+    BrowserAnimationsModule,   
     FormsModule,
     CommonModule,
-    FileUploadModule,
     HttpClientModule
     
   ],
