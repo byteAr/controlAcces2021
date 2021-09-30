@@ -3,16 +3,84 @@
       
         <h3>CONTROL DE INGRESO</h3>      
       <br>
-      <form *ngIf="!carga" (ngSubmit)="search()">
+      <form  (ngSubmit)="search()">
         <span class="p-float-label">
           <input  [(ngModel)]="dni" type="text" autocomplete="off" pInputText name="dni">
           <label for="float-input">Ingrese un número de DNI</label>
         </span>
         <br>
-        <p-selectButton [options]="tipoPersona" [(ngModel)]="tipo" optionLabel="tipo"></p-selectButton> 
+       <!--  <p-selectButton [options]="tipoPersona" [(ngModel)]="tipo" optionLabel="tipo"></p-selectButton>  -->
         <br>
         <p-button label="Buscar"  type="submit" icon="pi pi-search"></p-button>
       </form>
+      <br>      
     </p-card>  
   </div>
   <p-toast position="top-center"></p-toast>
+
+  <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Personal no registrado. Desea registrarlo?" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <!-- <img [src]="'assets/showcase/images/demo/product/' + product.image" [alt]="product.image" class="product-image" *ngIf="product.image"> -->
+        <div class="p-field">
+            <label for="name">Nombre</label>
+            <input type="text" pInputText id="name" [(ngModel)]="persona.nombre" required autofocus />
+            <small class="p-error" *ngIf="submitted && !persona.nombre">El Nombre es requerido.</small>
+        </div>
+        <div class="p-field">
+            <label for="name">Apellido</label>
+            <input type="text" pInputText id="name" [(ngModel)]="persona.apellido" required autofocus />
+            <small class="p-error" *ngIf="submitted && !persona.nombre">El Apellido es requerido.</small>
+        </div>
+        <!-- <div class="p-field">
+            <label for="description">description</label>
+            <textarea id="description" pInputTextarea [(ngModel)]="persona.description" required rows="3" cols="20"></textarea>
+        </div> -->
+        <div class="p-field">
+            <label for="inventoryStatus">Tipo Persona</label>
+            <p-dropdown [(ngModel)]="persona.tipoPersona" inputId="inventoryStatus" [options]="statuses" placeholder="Seleccione un tipo">
+                <ng-template let-option pTemplate="item">
+                    <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="p-field">
+            <label for="inventoryStatus">Tipo DNI</label>
+            <p-dropdown [(ngModel)]="persona.tipoPersona" inputId="inventoryStatus" [options]="tipoDni" placeholder="Seleccione un tipo de DNI">
+                <ng-template let-option pTemplate="item">
+                    <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="p-field">
+            <label for="name">DNI</label>
+            <input type="text" pInputText id="numeroDni" [(ngModel)]="persona.numeroDni" required autofocus />
+            <small class="p-error" *ngIf="submitted && !persona.codigoEstadistico">El número de DNI es requerido.</small>
+        </div>
+        <div class="p-field">
+            <label for="name">Código Estadistico</label>
+            <input type="text" pInputText id="codigoEstadictico" [(ngModel)]="persona.codigoEstadistico" required autofocus />
+            <small class="p-error" *ngIf="submitted && !persona.codigoEstadistico">El Código estadístico es requerido.</small>
+        </div>
+        <div class="p-field">
+            <label for="inventoryStatus">Jerarquia</label>
+            <p-dropdown [(ngModel)]="persona.jerarquia" inputId="jerarquia" [options]="jerarquia" placeholder="Select">
+                <ng-template let-option pTemplate="item">
+                    <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="p-field">
+            <label for="inventoryStatus">Destino</label>
+            <p-dropdown [(ngModel)]="persona.destinoHabitual" inputId="destinoHabitual" [options]="destino" placeholder="Select">
+                <ng-template let-option pTemplate="item">
+                    <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>        
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+    </ng-template>
+</p-dialog>
