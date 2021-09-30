@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { map, tap } from 'rxjs/operators'
+import { AllPersonal } from '../interfaces/allPersonal.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -29,10 +30,10 @@ export class BusquedaService {
   traerTodosLosUsuarios() {
     const url = `${this.baseUrl}/personas`;
     return this.http.get<any>(url)
-     .pipe(
-       tap(resp => {
+     /* ipe(
+       map(resp => {
         return resp.content
        })
-     )
+     ) */
   }
 }

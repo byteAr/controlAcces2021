@@ -5,3 +5,4 @@ export interface Personal {
     CE: number,
     DESTINO: string
 }
+
