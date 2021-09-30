@@ -45,7 +45,7 @@
         </div>
         <div class="p-field">
             <label for="inventoryStatus">Tipo DNI</label>
-            <p-dropdown [(ngModel)]="persona.tipoPersona" inputId="inventoryStatus" [options]="tipoDni" placeholder="Seleccione un tipo de DNI">
+            <p-dropdown [(ngModel)]="persona.tipoDni" inputId="inventoryStatus" [options]="tipoDni" placeholder="Seleccione un tipo de DNI">
                 <ng-template let-option pTemplate="item">
                     <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
                 </ng-template>
@@ -56,14 +56,14 @@
             <input type="text" pInputText id="numeroDni" [(ngModel)]="persona.numeroDni" required autofocus />
             <small class="p-error" *ngIf="submitted && !persona.codigoEstadistico">El número de DNI es requerido.</small>
         </div>
-        <div class="p-field">
+        <div *ngIf="persona.tipoPersona == 'GENDARME' || 'CIVIL'" class="p-field">
             <label for="name">Código Estadistico</label>
-            <input type="text" pInputText id="codigoEstadictico" [(ngModel)]="persona.codigoEstadistico" required autofocus />
+            <input type="text" pInputText id="codigoEstadistico" [(ngModel)]="persona.codigoEstadistico" required autofocus />
             <small class="p-error" *ngIf="submitted && !persona.codigoEstadistico">El Código estadístico es requerido.</small>
         </div>
-        <div class="p-field">
+        <div *ngIf="persona.tipoPersona == 'GENDARME'" class="p-field">
             <label for="inventoryStatus">Jerarquia</label>
-            <p-dropdown [(ngModel)]="persona.jerarquia" inputId="jerarquia" [options]="jerarquia" placeholder="Select">
+            <p-dropdown [(ngModel)]="persona.jerarquia" inputId="persona.jerarquia" [options]="jerarquia" placeholder="Select">
                 <ng-template let-option pTemplate="item">
                     <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
                 </ng-template>
@@ -71,7 +71,7 @@
         </div>
         <div class="p-field">
             <label for="inventoryStatus">Destino</label>
-            <p-dropdown [(ngModel)]="persona.destinoHabitual" inputId="destinoHabitual" [options]="destino" placeholder="Select">
+            <p-dropdown [(ngModel)]="persona.destinoHabitual" inputId="persona.destinoHabitual" [options]="destino" placeholder="Select">
                 <ng-template let-option pTemplate="item">
                     <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
                 </ng-template>

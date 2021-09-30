@@ -4,6 +4,7 @@ import { ConfirmationService } from 'primeng/api';
 import { Personal } from 'src/app/interfaces/personal.interface';
 import { tipoPersona } from 'src/app/interfaces/tipoPersona.interface';
 import { BusquedaService } from 'src/app/services/busqueda.service';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-home',
@@ -37,16 +38,17 @@ export class HomeComponent implements OnInit {
 
   constructor( private messageService: MessageService,
                private confirmationService: ConfirmationService,
-               private findUser: BusquedaService) { 
+               private findUser: BusquedaService,
+               private userService: UsersService) { 
     this.tipoPersona = [
       { tipo: 'GENDARME'},
       { tipo: 'CIVIL'}
     ]
 
     this.statuses = [
-      {label: 'UNIFORMADO', value: 'uniformado'},
-      {label: 'CIVIL', value: 'civil'},
-      {label: 'VISITA', value: 'visita'}
+      {label: 'GENDARME', value: 'GENDARME'},
+      {label: 'CIVIL', value: 'CIVIL'},
+      {label: 'INVITADO', value: 'INVITADO'}
   ];
   this.tipoDni = [
       {label: 'DNI 1', value: 'DNI 1'},
@@ -117,23 +119,19 @@ export class HomeComponent implements OnInit {
     const content = this.findUser.buscarPersonal(dni, 'GENDARME')
       .subscribe(resp => {
         if (resp.code == "200") {
-          this.messageService.add({severity:'success', summary:'INGRESO AUTORIZADO', detail:`Nombre y Apellido: ${resp.content[0].nombre}  ${resp.content[0].apellido} Jerarquia: ${resp.content[0].jerarquia} C.E: ${resp.content[0].codigoEstadistico} DESTINO: ${resp.content[0].destinoHabitual}`});
+          const { nombre, apellido, codigoEstadistico, jerarquia, id, destinoHabitual } = resp.content[0]
+          this.messageService.add({severity:'success', summary:'INGRESO AUTORIZADO', detail:`Nombre y Apellido: ${nombre}  ${apellido} Jerarquia: ${jerarquia} C.E: ${codigoEstadistico} DESTINO: ${destinoHabitual}`});
+          this.userService.entryEvent(id, destinoHabitual)
+            .subscribe(resp => {
+              console.log(resp);
+            })
         } else if (!this.dni){
           this.messageService.add({severity:'error', summary:'DEBE INGRESAR UN DNI VÁLIDO', detail:'Ingrese un DNI'});
         } else if ( resp.code == "410") {          
           this.openNew();
         }
       })
-      /* switch (content.code) {
-        case :
-          this.messageService.add({severity:'error', summary:'ACCESO DENEGADO', detail:'El DNI proporcionado no corresponde a una persona autorizada a Ingresar'});
-          break;      
-        case :
-          this.messageService.add({severity:'success', summary:'INGRESO AUTORIZADO', detail:`aparecio nomás la persona`});
-          break;
-        default:
-          this.messageService.add({severity:'success', summary:'', detail:`Por favor ingrese un dni válido`});
-      }   */
+      
   }
 
   openNew() {
@@ -158,22 +156,22 @@ export class HomeComponent implements OnInit {
     this.submitted = false;
   }
 
-saveProduct() {
-    this.submitted = true;
+  saveProduct() {
+      this.submitted = true;
+      const {nombre, apellido, tipoDni, numeroDni, tipoPersona, jerarquia, createdUser, destinoHabitual, codigoEstadistico} = this.persona;
+      this.userService.createUser(nombre, apellido, tipoDni, numeroDni, tipoPersona, destinoHabitual,  codigoEstadistico, createdUser, jerarquia )
+        .subscribe(resp => {
+          console.log(resp);
+          if(resp.code == "200") {
+            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Usuario Creado Exitosamente', life: 7000});
+          } else {
+            this.messageService.add({severity:'error', summary: 'Successful', detail: `${resp.message}`, life: 7000});
+          }
+          this.productDialog = false;
+        })
 
-    if (this.persona.name.trim()) {        
-         
-          this.persona.id = this.createId();
-          this.persona.image = 'product-placeholder.svg';
-          this.personal.push(this.persona);
-          this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
-        
-
-        this.personal = [...this.personal];
-        this.productDialog = false;
-        this.persona = {};
-    }
-}
+      
+  }
 
 
 
